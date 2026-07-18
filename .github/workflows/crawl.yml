@@ -1,0 +1,33 @@
+name: JORYSI crawl
+
+on:
+  schedule:
+    - cron: "*/10 * * * *"   # 每 10 分钟（GitHub 有时会延迟几分钟，属正常）
+  workflow_dispatch:          # 允许手动点“Run workflow”测试
+
+concurrency:
+  group: jorysi-crawl
+  cancel-in-progress: false   # 上一次没跑完就不重叠开新的
+
+jobs:
+  crawl:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Run crawler
+        env:
+          WORKER_URL: ${{ secrets.WORKER_URL }}
+          INGEST_TOKEN: ${{ secrets.INGEST_TOKEN }}
+        run: node crawl.js
