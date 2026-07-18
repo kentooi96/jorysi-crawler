@@ -1,0 +1,14 @@
+{
+  "name": "jorysi-crawler",
+  "version": "1.1.0",
+  "private": true,
+  "description": "External browser crawler for JORYSI GPT — runs on GitHub Actions with stealth, pushes data to the Worker /ingest endpoint.",
+  "scripts": {
+    "start": "node crawl.js"
+  },
+  "dependencies": {
+    "playwright": "^1.47.2",
+    "playwright-extra": "^4.3.6",
+    "puppeteer-extra-plugin-stealth": "^2.11.2"
+  }
+}
