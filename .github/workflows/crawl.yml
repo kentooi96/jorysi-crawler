@@ -12,22 +12,22 @@ concurrency:
 jobs:
   crawl:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 18
     steps:
       - uses: actions/checkout@v4
 
       - uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: "22"
 
       - name: Install dependencies
         run: npm install
 
-      - name: Install Chromium
+      - name: Install Chromium + system deps
         run: npx playwright install --with-deps chromium
 
-      - name: Run crawler
+      - name: Run crawler (headed under xvfb)
         env:
           WORKER_URL: ${{ secrets.WORKER_URL }}
           INGEST_TOKEN: ${{ secrets.INGEST_TOKEN }}
-        run: node crawl.js
+        run: xvfb-run -a node crawl.js
